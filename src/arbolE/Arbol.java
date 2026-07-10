@@ -56,7 +56,6 @@ public class Arbol {
         return reglasE;
     }
     public void agregaValex (String lexema, String valor){
-        
     }//agregarValex-Analisis semantico
     
     public String regresaValex (String lexema){
@@ -123,12 +122,14 @@ public class Arbol {
                 System.out.println("se trata de un identificador");
                 //
             }else if(aritmeticos.indexOf(token)<0){
-                //6.extraer de la pila los terminos que estaban
+
+
+              //6.extraer de la pila los terminos que estaban
                 ArbolNodo.push(new Nodo(token));
                 paso ++;
                 String regla = "T.nodo=new Hoja(id<"+token+">,id.entrada_"+token+")";
                 reglasEjecutadas.add("p" +paso+ regla);
-                
+               
             }else if(token.equals(")")){
                 //7.tratar tokens que no son parentesis
               while (!caracter.empty() && !caracter.peek().equals("(")){

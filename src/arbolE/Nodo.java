@@ -18,8 +18,9 @@ public class Nodo {
     private Nodo derecho;
     private String codigoIntermedio;
     private String lugar;//para los temporales
-    
+    String valor ;
     //CONSTRUCTORES
+    
 
     public Nodo(Nodo derecho, String dato, Nodo izquierdo ) {
         this.dato = dato;
@@ -28,9 +29,13 @@ public class Nodo {
     }
     
     
-    
-    
-    
+    public String getValor() {
+        return valor;
+    }
+
+    public void setValor(String valor) {
+        this.valor = valor;
+    }
     public Nodo(String dato){
         this.dato=dato;
     }
