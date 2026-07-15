@@ -20,7 +20,7 @@ public class ArbolAgenteIA {
     //identidicar enre operador y operando
     final String espacios ="\t";
     final String aritmeticos ="+-*()^=/";
-           
+    private ArrayList<String[]> tripletas;       
     final String variables ="abcdefghijklmnopqrstuvwxyz";
     final String opMultiplica="*";
     private Nodo raiz;
@@ -36,7 +36,7 @@ public class ArbolAgenteIA {
         ArrayList <String> reglasEjecutadas;
     public ArbolAgenteIA(){
         reglasEjecutadas = new  ArrayList<String> ();//1ro Julio
-        
+        tripletas = new ArrayList<String[]>();
         tablaSimbolos = new HashMap();
        erroresSemanticos = new HashMap();
        producciones = new HashMap();
@@ -157,7 +157,46 @@ for (String clave : tablaSimbolos.keySet()) {
         return raiz;
     }//crear
     
+    //agregado nuevo 
     
+    public Nodo convertirAGAD(Nodo raizAST) {
+        HashMap<String, Nodo> tabla = new HashMap<>();
+        return convertir(raizAST, tabla);
+    }
+
+    private Nodo convertir(Nodo n, HashMap<String, Nodo> tabla) {
+        if (n == null) return null;
+
+        if (n.getIzquierdo() == null && n.getDerecho() == null) {
+            String clave = "HOJA#" + n.getDato();
+            Nodo existente = tabla.get(clave);
+            if (existente != null) return existente; // reutiliza
+            tabla.put(clave, n);
+            return n;
+        }
+
+        // Procesar hijos primero (post-orden): así al llegar al padre
+        // ya sabemos si los hijos son nodos compartidos o no.
+        Nodo izqNuevo = convertir(n.getIzquierdo(), tabla);
+        Nodo derNuevo = convertir(n.getDerecho(), tabla);
+
+        // Reasignar hijos (puede que ahora apunten a nodos ya existentes)
+        n.setIzquierdo(izqNuevo);
+        n.setDerecho(derNuevo);
+
+        String clave = n.getDato() + "#" 
+                     + System.identityHashCode(izqNuevo) + "#" 
+                     + System.identityHashCode(derNuevo);
+
+        Nodo existente = tabla.get(clave);
+        if (existente != null) return existente; 
+
+        tabla.put(clave, n);
+        return n;
+    }
+    
+    
+    //
     private int obtenerPrioridad(String operador){
      switch(operador){
          case " ":
@@ -173,6 +212,41 @@ for (String clave : tablaSimbolos.keySet()) {
                      
      }   
     }
+    
+    
+    //agregado equipo
+    public ArrayList<String[]> getTripletas() {
+    return tripletas;
+}
+
+public void generarTripletas(Nodo nodo) {
+    tripletas.clear();
+    generarTripletasRecursivo(nodo);
+}
+
+private String generarTripletasRecursivo(Nodo nodo) {
+    if (nodo == null) {
+        return "";
+    }
+
+    // Si es una hoja: variable o número
+    if (nodo.getIzquierdo() == null && nodo.getDerecho() == null) {
+        return nodo.getDato();
+    }
+
+    String arg1 = generarTripletasRecursivo(nodo.getIzquierdo());
+    String arg2 = generarTripletasRecursivo(nodo.getDerecho());
+
+    tripletas.add(new String[]{
+        nodo.getDato(), // Operador
+        arg1,           // Argumento 1
+        arg2            // Argumento 2
+    });
+
+    // Referencia a la posición de la tripleta creada
+    return "[" + (tripletas.size() - 1) + "]";
+}
+    //
 }//fin clase
 
 

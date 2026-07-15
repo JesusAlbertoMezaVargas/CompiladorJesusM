@@ -17,6 +17,7 @@ public class FramePrincipal extends javax.swing.JFrame {
   
     public FramePrincipal() {
         initComponents();
+        
         setLocationRelativeTo(null);
         Interfaz = new Frrameinterfaz();
     
@@ -182,10 +183,12 @@ public class FramePrincipal extends javax.swing.JFrame {
         jButton4.setText("Regla Semantica");
 
         jButton5.setText("Cuadruplos");
+        jButton5.addActionListener(this::jButton5ActionPerformed);
 
         jButton6.setText("Validacion Metodos");
 
         jButton7.setText("Codigo Intermedio");
+        jButton7.addActionListener(this::jButton7ActionPerformed);
 
         jButton8.setText("N polaca");
 
@@ -293,6 +296,14 @@ public class FramePrincipal extends javax.swing.JFrame {
     private void jButton19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton19ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton19ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        
+    }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
      * @param args the command line arguments
