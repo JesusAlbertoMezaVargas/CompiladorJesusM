@@ -816,7 +816,7 @@ PanelArbol panel = new PanelArbol(
             "MOV DS, AX \n";
     
     String  finalEmu = arbol.emu86 + this.emuLocal;
-    finalEmu +="\n move AX, ac0h \n"+
+    finalEmu +="\n mov AX, ac0h \n"+
             "int 21h \n end";
     
     showMessageDialog(null,finalEmu);
