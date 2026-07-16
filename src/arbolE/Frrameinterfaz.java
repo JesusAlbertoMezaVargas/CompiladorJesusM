@@ -13,8 +13,13 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import java.awt.Desktop;
+import java.io.File;
 import java.net.URI;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.showMessageDialog;
 
 /**
  *
@@ -23,7 +28,10 @@ import javax.swing.JOptionPane;
 public class Frrameinterfaz extends javax.swing.JFrame {
     String nPolaca;
     JFrame ventana;
-    FrameCuadruplos cuadruplos;
+     int Contador =0;
+    String emuLocal = "";//15 de julio
+    String izquierdo, derecho;//15 de julio
+    FrameCuadruplos cuadruplos;//equipo
     int temp;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Frrameinterfaz.class.getName());
 
@@ -34,7 +42,11 @@ public Frrameinterfaz() {
     initComponents();
     nPolaca = "";
     temp=0;
-
+   
+    String emuLocal = "";//15 de julio
+    izquierdo = "";//15 de julio
+    derecho = "";//15 de julio
+    FrameCuadruplos cuadruplos;//equipo
     // Imagen 1
     ImageIcon icono = new ImageIcon(getClass().getResource("/arbolE/Logo tec.png"));
     Image imagen = icono.getImage();
@@ -48,6 +60,55 @@ public Frrameinterfaz() {
     jLabel12.setIcon(new ImageIcon(imagenEscalada2));
 }
 
+public void generarEmutasm(String emu, int i) {
+    try {
+        // Crear el archivo
+        File archivoAsm = new File("e" + i + ".asm");
+
+        FileWriter escritor = new FileWriter(archivoAsm);
+        escritor.write(emu);
+        escritor.close();
+
+        System.out.println("Archivo creado: " + archivoAsm.getAbsolutePath());
+
+        // Ruta donde está instalado emu8086
+        String rutaEmu8086 = "C:\\emu8086\\emu8086.exe";//modificar aqui
+
+        // Abrir el archivo .asm directamente en emu8086
+        ProcessBuilder proceso = new ProcessBuilder(
+                rutaEmu8086,
+                archivoAsm.getAbsolutePath()
+        );
+
+        proceso.start();
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(
+                null,
+                "Error al crear o abrir el archivo en emu8086:\n" 
+                + e.getMessage()
+        );
+        e.printStackTrace();
+    }
+}
+
+public void Sonido(){
+    //sonido
+                try {
+                    File sonido = new File("C:\\Users\\Jesus Meza\\OneDrive\\Documentos\\VERANO2026\\AUTOMATAS 2\\ArbolExpresiones\\src\\arbolE\\new-notification-022-370046.wav");
+                    if (sonido.exists()) {
+                        AudioInputStream audioStream = AudioSystem.getAudioInputStream(sonido);
+                        Clip clip = AudioSystem.getClip();
+                        clip.open(audioStream);
+                        clip.start(); 
+                    } else {
+                        showMessageDialog(null, "No se encontró el archivo de sonido.");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showMessageDialog(null, "Error al reproducir el sonido.");
+                }
+}
 public void inOrden(Nodo n){//izq raiz Der
  if(n!=null){
      inOrden(n.getIzquierdo());
@@ -57,8 +118,45 @@ public void inOrden(Nodo n){//izq raiz Der
                 n.getDato());
         
         inOrden(n.getDerecho());
+        
+        //15 de julio
+        
+        switch(n.getDato()){
+            
+            case "+":
+                izquierdo = n.getIzquierdo().getDato();
+                derecho = n.getDerecho().getDato();
+                System.out.println ("ADD Meza VARGAS");
+                emuLocal += "MOV AX, "+ n.getIzquierdo().getDato()+"\n";
+                emuLocal += "MOV BX, "+ n.getDerecho().getDato()+"\n";
+                emuLocal += "ADD AX,BX"+"\n\n";
+            break;
+            case "-": 
+                izquierdo = n.getIzquierdo().getDato();
+                derecho = n.getDerecho().getDato();
+                System.out.println("SUB");
+                emuLocal += "MOV AX, "+ n.getIzquierdo().getDato()+"\n";
+                emuLocal += "MOV BX, "+ n.getDerecho().getDato()+"\n";
+                emuLocal += "ADD AX,BX"+"\n\n";
+            break;
+              case "/": 
+                  izquierdo = n.getIzquierdo().getDato();
+                  derecho = n.getDerecho().getDato();
+                  System.out.println("DIV");
+                  emuLocal += "MOV AX, "+ n.getIzquierdo().getDato()+"\n";
+                  emuLocal += "MOV BX, "+ n.getDerecho().getDato()+"\n";
+                  emuLocal += "ADD AX,BX"+"\n\n";
+            break;
+            case "*": 
+                izquierdo = n.getIzquierdo().getDato();
+                derecho = n.getDerecho().getDato();
+                System.out.println("MUL");
+                emuLocal += "MOV AX, "+ n.getIzquierdo().getDato()+"\n";
+                emuLocal += "MOV BX, "+ n.getDerecho().getDato()+"\n";
+                emuLocal += "ADD AX,BX"+"\n\n";
+        }//switch
     }//if
-}
+}//inorden
 
 public void preOrden(Nodo n){//raiz izq der
     if(n!=null){
@@ -576,6 +674,7 @@ private boolean esOperador(String dato) {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void AgenteIAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AgenteIAActionPerformed
+    
         String datos = "";
     ArbolAgenteIA arbol = new ArbolAgenteIA();
 
@@ -711,6 +810,20 @@ PanelArbol panel = new PanelArbol(
     inOrden(arbolExpresion);
     postOrden(arbolExpresion);
     
+    
+    arbol.emu86+=".CODE \n"+
+                "MOV AX, @DATA \n"+
+            "MOV DS, AX \n";
+    
+    String  finalEmu = arbol.emu86 + this.emuLocal;
+    finalEmu +="\n move AX, ac0h \n"+
+            "int 21h \n end";
+    
+    showMessageDialog(null,finalEmu);
+        Contador++;
+        generarEmutasm(finalEmu, Contador);
+        Sonido();
+    
     //intermedio(arbolExpresion);
     intermedioIA(arbolExpresion);
     
@@ -733,7 +846,9 @@ ventanaGrafo.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 ventanaGrafo.setLocationRelativeTo(null);
 ventanaGrafo.setVisible(true);
 
-
+//OTRO EQUIPO
+cuadruplos = new FrameCuadruplos();
+       cuadruplos.setVisible(true);
 
 //otro equipo agrego esto
 // Generar las tripletas a partir del árbol
@@ -756,8 +871,7 @@ ventanaTripletas.setVisible(true);
     }//GEN-LAST:event_OptimizaIntermedioActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-       cuadruplos = new FrameCuadruplos();
-cuadruplos.setVisible(true);
+       
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

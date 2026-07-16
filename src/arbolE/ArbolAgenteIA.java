@@ -32,9 +32,15 @@ public class ArbolAgenteIA {
         int paso = 0;
     String reglaSemantica;   
         
+      public String emu86; //===15 de julio
         //1ro Julio 
         ArrayList <String> reglasEjecutadas;
     public ArbolAgenteIA(){
+         emu86=";MEZA VARGAS JESUS ALBERTO\n"+
+                    ".MODEL SMALL\n"+
+                    ".STACK \n"+
+                    ".DATA \n";
+         
         reglasEjecutadas = new  ArrayList<String> ();//1ro Julio
         tripletas = new ArrayList<String[]>();
         tablaSimbolos = new HashMap();
@@ -102,11 +108,32 @@ public class ArbolAgenteIA {
            //no es un operador aritmetico
                 //6. Extraer de la pila los terminos que estaban
                 ArbolNodo.push(new Nodo(token));
+
+if (!tablaSimbolos.containsKey(token)) {
+
+    String valor = JOptionPane.showInputDialog(
+            "Ingrese el valor para el identificador: " + token
+    );
+
+    agregaValex(token, valor);
+
+    // Agregar variable y valor al código ensamblador
+    emu86 += token + " dw " + valor + "\n";
+}
+
+paso++;
+
+String regla = "T.nodo = new Hoja(id<" + token
+        + ">,id.entrada_" + token + ")";
+
+reglasEjecutadas.add("p" + paso + " " + regla);
+               /* ArbolNodo.push(new Nodo(token));
+            emu86+= token+" dw "+ valor +"\n";//15 de julio
                 paso++;
                 String regla ="T.nodo = new Hoja(id<"+token+">,id.entrada_"+token+")";
                 reglasEjecutadas.add("p"+paso+""+regla);
                 
-                //solicitar el valor del token 
+                //solicitar el valor del token */
               
 if (!tablaSimbolos.containsKey(token)) {
 

@@ -1,0 +1,17 @@
+;MEZA VARGAS JESUS ALBERTO
+.MODEL SMALL
+.STACK 
+.DATA 
+a dw 3
+b dw 2
+.CODE 
+MOV AX, @DATA 
+MOV DS, AX 
+MOV AX, b
+MOV BX, a
+ADD AX,BX
+
+
+ move AX, ac0h 
+int 21h 
+ end

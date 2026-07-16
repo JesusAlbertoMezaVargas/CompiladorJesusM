@@ -27,11 +27,14 @@ public class Arbol {
     HashMap<String,String> producciones;
     
     int paso;
-    
+  
     //constructor
     //==========1RO DE JULIO
     ArrayList<String> reglasEjecutadas;
     public Arbol(){
+        
+           
+        
             reglasEjecutadas = new ArrayList<String>();//1RO DE JULIO
             tablaSimbolos = new HashMap();
             erroresSemanticos = new HashMap();
