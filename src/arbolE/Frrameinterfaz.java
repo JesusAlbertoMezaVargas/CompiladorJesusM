@@ -72,7 +72,7 @@ public void generarEmutasm(String emu, int i) {
         System.out.println("Archivo creado: " + archivoAsm.getAbsolutePath());
 
         // Ruta donde está instalado emu8086
-        String rutaEmu8086 = "C:\\emu8086\\emu8086.exe";//modificar aqui
+        String rutaEmu8086 = "C:\\emu8086\\emu8086.exe";
 
         // Abrir el archivo .asm directamente en emu8086
         ProcessBuilder proceso = new ProcessBuilder(
@@ -783,12 +783,7 @@ switch (opcionNodo) {
 
     JFrame ventana = new JFrame("Visualizador de Árboles - LyA2");
 
-    /*PanelArbol panel = new PanelArbol(
-            arbolExpresion,
-            radio,
-            anchoLinea,
-            colorLinea,
-            colorNodo); */
+   
 PanelArbol panel = new PanelArbol(
         arbolExpresion,
         radio,
@@ -816,9 +811,11 @@ PanelArbol panel = new PanelArbol(
             "MOV DS, AX \n";
     
     String  finalEmu = arbol.emu86 + this.emuLocal;
-    finalEmu +="\n mov AX, ac0h \n"+
-            "int 21h \n end";
+    finalEmu +=" MOV AX, 4C00h\n"+
+            "INT 21h \n"+
+            "end";
     
+  
     showMessageDialog(null,finalEmu);
         Contador++;
         generarEmutasm(finalEmu, Contador);

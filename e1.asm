@@ -2,8 +2,8 @@
 .MODEL SMALL
 .STACK 
 .DATA 
-a dw 3
-b dw 2
+a dw 4
+b dw 3
 .CODE 
 MOV AX, @DATA 
 MOV DS, AX 
@@ -11,7 +11,6 @@ MOV AX, b
 MOV BX, a
 ADD AX,BX
 
-
- mov AX, ac0h 
-int 21h 
- end
+ MOV AX, 4C00h
+INT 21h 
+end
