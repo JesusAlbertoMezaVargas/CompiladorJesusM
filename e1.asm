@@ -12,6 +12,6 @@ MOV BX, a
 ADD AX,BX
 
 
- move AX, ac0h 
+ mov AX, ac0h 
 int 21h 
  end
